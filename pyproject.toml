@@ -5,13 +5,38 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "open-document-toolkit"
 version = "0.1.0"
-description = "An open-source toolkit for creating, editing, and managing PDF documents."
+description = "An open-source Python toolkit for creating, editing, converting, and managing PDF documents."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
+
 authors = [
     {name = "gitaliup"}
 ]
+
+keywords = [
+    "pdf",
+    "document",
+    "pdf-tools",
+    "pdf-processing",
+    "document-processing"
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Text Processing",
+]
+
 dependencies = [
     "pypdf>=5.0.0"
 ]
@@ -20,6 +45,11 @@ dependencies = [
 test = [
     "pytest>=8.0"
 ]
+
+[project.urls]
+Homepage = "https://github.com/gitaliup/open-document-toolkit"
+Repository = "https://github.com/gitaliup/open-document-toolkit"
+Issues = "https://github.com/gitaliup/open-document-toolkit/issues"
 
 [project.scripts]
 odt = "odt.pdf:main"
