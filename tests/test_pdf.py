@@ -1,8 +1,6 @@
-from pathlib import Path
-
 from pypdf import PdfReader, PdfWriter
 
-from odt import merge_pdfs, split_pdf, rotate_pdf
+from odt import merge_pdfs, split_pdf, rotate_pdf, delete_pages
 
 
 def create_pdf(path, number_of_pages=1):
@@ -53,7 +51,7 @@ def test_split_pdf(tmp_path):
 
 
 def test_rotate_pdf(tmp_path):
-    """Test rotating all pages in a PDF."""
+    """Test rotating a PDF."""
     input_pdf = tmp_path / "document.pdf"
     output_pdf = tmp_path / "rotated.pdf"
 
@@ -69,3 +67,21 @@ def test_rotate_pdf(tmp_path):
 
     assert len(reader.pages) == 1
     assert reader.pages[0].rotation == 90
+
+
+def test_delete_pages(tmp_path):
+    """Test deleting specific pages from a PDF."""
+    input_pdf = tmp_path / "document.pdf"
+    output_pdf = tmp_path / "without_pages.pdf"
+
+    create_pdf(input_pdf, 5)
+
+    delete_pages(
+        input_pdf,
+        output_pdf,
+        [2, 4],
+    )
+
+    reader = PdfReader(output_pdf)
+
+    assert len(reader.pages) == 3
