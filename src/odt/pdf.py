@@ -1,6 +1,5 @@
 import argparse
 from pathlib import Path
-
 from pypdf import PdfReader, PdfWriter
 
 
@@ -43,6 +42,27 @@ def rotate_pdf(input_file, output_file, degrees=90):
     for page in reader.pages:
         page.rotate(degrees)
         writer.add_page(page)
+
+    with open(output_file, "wb") as output:
+        writer.write(output)
+
+
+def delete_pages(input_file, output_file, pages):
+    """Delete specific pages from a PDF.
+
+    Pages are specified using 1-based page numbers.
+    """
+    reader = PdfReader(input_file)
+    writer = PdfWriter()
+
+    pages_to_delete = set(pages)
+
+    for number, page in enumerate(reader.pages, start=1):
+        if number not in pages_to_delete:
+            writer.add_page(page)
+
+    if len(pages_to_delete) > len(reader.pages):
+        raise ValueError("One or more page numbers are outside the PDF range.")
 
     with open(output_file, "wb") as output:
         writer.write(output)
@@ -114,6 +134,27 @@ def build_parser():
         help="Rotation angle",
     )
 
+    delete_parser = subparsers.add_parser(
+        "delete",
+        help="Delete specific pages from a PDF",
+    )
+    delete_parser.add_argument(
+        "input_file",
+        help="Input PDF file",
+    )
+    delete_parser.add_argument(
+        "pages",
+        nargs="+",
+        type=int,
+        help="Page numbers to delete, starting from 1",
+    )
+    delete_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Output PDF file",
+    )
+
     return parser
 
 
@@ -139,6 +180,13 @@ def main():
             args.input_file,
             args.output,
             args.degrees,
+        )
+
+    elif args.command == "delete":
+        delete_pages(
+            args.input_file,
+            args.output,
+            args.pages,
         )
 
 
