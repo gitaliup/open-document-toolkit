@@ -11,6 +11,12 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    environment:
+      name: pypi
+
+    permissions:
+      id-token: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
