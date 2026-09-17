@@ -57,12 +57,30 @@ def delete_pages(input_file, output_file, pages):
 
     pages_to_delete = set(pages)
 
+    if any(page < 1 or page > len(reader.pages) for page in pages_to_delete):
+        raise ValueError("One or more page numbers are outside the PDF range.")
+
     for number, page in enumerate(reader.pages, start=1):
         if number not in pages_to_delete:
             writer.add_page(page)
 
-    if len(pages_to_delete) > len(reader.pages):
+    with open(output_file, "wb") as output:
+        writer.write(output)
+
+
+def extract_pages(input_file, output_file, pages):
+    """Extract specific pages from a PDF into a new PDF.
+
+    Pages are specified using 1-based page numbers.
+    """
+    reader = PdfReader(input_file)
+    writer = PdfWriter()
+
+    if any(page < 1 or page > len(reader.pages) for page in pages):
         raise ValueError("One or more page numbers are outside the PDF range.")
+
+    for page_number in pages:
+        writer.add_page(reader.pages[page_number - 1])
 
     with open(output_file, "wb") as output:
         writer.write(output)
@@ -155,6 +173,27 @@ def build_parser():
         help="Output PDF file",
     )
 
+    extract_parser = subparsers.add_parser(
+        "extract",
+        help="Extract specific pages from a PDF",
+    )
+    extract_parser.add_argument(
+        "input_file",
+        help="Input PDF file",
+    )
+    extract_parser.add_argument(
+        "pages",
+        nargs="+",
+        type=int,
+        help="Page numbers to extract, starting from 1",
+    )
+    extract_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Output PDF file",
+    )
+
     return parser
 
 
@@ -184,6 +223,13 @@ def main():
 
     elif args.command == "delete":
         delete_pages(
+            args.input_file,
+            args.output,
+            args.pages,
+        )
+
+    elif args.command == "extract":
+        extract_pages(
             args.input_file,
             args.output,
             args.pages,
