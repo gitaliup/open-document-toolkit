@@ -9,6 +9,7 @@ Open Document Toolkit provides a simple Python API and command-line interface fo
 - Merge multiple PDF files into one PDF
 - Split PDF files into individual pages
 - Rotate PDF pages
+- Delete specific pages from a PDF
 - Python API
 - Command-line interface
 - Automated tests
@@ -53,6 +54,18 @@ Install the latest release from PyPI:
         degrees=90
     )
 
+#### Delete Pages
+
+    from odt import delete_pages
+
+    delete_pages(
+        "document.pdf",
+        "without_pages.pdf",
+        [2, 4]
+    )
+
+Pages are specified using 1-based page numbers.
+
 ## Command-Line Interface
 
 After installation, the `odt` command is available.
@@ -68,6 +81,12 @@ After installation, the `odt` command is available.
 ### Rotate PDF
 
     odt rotate document.pdf -o rotated.pdf -d 90
+
+### Delete Pages
+
+    odt delete document.pdf 2 4 -o without_pages.pdf
+
+The example above deletes pages 2 and 4.
 
 Supported rotation angles:
 
